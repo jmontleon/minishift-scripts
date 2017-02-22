@@ -6,6 +6,7 @@ dnf -y install nfs-utils iptables-services
 for i in $(seq -w 1 $NUM_PVS); do
   mkdir -p /nfsvolumes/pv${i}
   chmod 777 /nfsvolumes/pv${i}
+  chown -R nfsnobody:nfsnobody /nfsvolumes/pv${i}
 done
 
 #This only works on a non-empty file so we check after and add it if it doesn't leave or update it

@@ -3,10 +3,10 @@ source config
 
 pushd ~
 for i in $(seq 1 ${NUM_PVS}); do
-  sudo rm -rf /nfsvolumes/pv0${i}/*
-  sudo rm -rf /nfsvolumes/pv0${i}/.a*
-  oc export pv pv0${i} > pv
-  oc delete pv pv0${i}
+  sudo rm -rf /nfsvolumes/pv${i}/*
+  sudo rm -rf /nfsvolumes/pv${i}/.a*
+  oc export pv pv${i} > pv
+  oc delete pv pv${i}
   oc create -f pv
   rm -f pv
 done
