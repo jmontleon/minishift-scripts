@@ -87,6 +87,6 @@ if ${ADD_PVS}; then
 fi
 
 oc login -u system:admin
-add-scc-to-group anyuid system:authenticated
+oadm add-scc-to-group anyuid system:authenticated
 oadm policy add-cluster-role-to-user cluster-admin admin
 oc login -u admin -p admin

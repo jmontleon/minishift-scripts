@@ -7,4 +7,4 @@ export ADD_NFS=false
 export ADD_PVS=true
 export NUM_PVS=10
 export PV_SIZE=3             #GiB
-export PV_IP=192.168.122.204
+export PV_IP=$(ifconfig | grep -w inet | grep 122 | awk '{ print $2 }')
