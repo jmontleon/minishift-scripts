@@ -1,6 +1,6 @@
 ## Scripts to help set up minishift
- * ensure you have origin and origin-clients installed
- * Modify options in the config file
+  * ensure you have origin and origin-clients installed
+ * Copy config.example to config and change options in the file
  * By default it looks for minishift in a folder side by side with minishift-scripts
  * Use minishift-create.sh to create your minishift
  * use other scripts to manage it
