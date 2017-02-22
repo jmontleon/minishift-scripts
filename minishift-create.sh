@@ -1,8 +1,10 @@
 #!/bin/bash
 source config
 
+echo Minishift is $MINISHIFT
+
 ### Things that may break if you change them:
-if ! -f ${MINISHIFT}; then
+if [ ! -f ${MINISHIFT} ]; then
   echo "minishift not found. Change MINISHIFT and try again"
   exit 1
 fi
@@ -20,7 +22,7 @@ ${MINISHIFT} ssh -- mkdir -p origin
 ${MINISHIFT} ssh -- "echo FROM openshift/origin:v1.4.1 > origin/Dockerfile"
 ${MINISHIFT} ssh -- "echo RUN yum -y install nfs-utils >> origin/Dockerfile"
 ${MINISHIFT} ssh -- docker build -t openshift/origin:v1.4.1 origin
-${MINISHIFT} ssh --sync
+${MINISHIFT} ssh -- sync
 ${MINISHIFT} stop
 ${MINISHIFT} start
 
