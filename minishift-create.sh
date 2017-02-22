@@ -7,11 +7,15 @@ echo Minishift is $MINISHIFT
 if [ ! -f ${MINISHIFT} ]; then
   echo "minishift not found. Change MINISHIFT and try again"
   exit 1
-fi
-
-if ${ADD_NFS} && $(id -u) > 0; then
-  echo "Change ADD_PVS and ADD_NFS to false or run as root"
+elif ! rpm -q origin 2>&1 > /dev/null; then 
+  echo "Install origin: dnf -y install origin"; 
   exit 2
+elif ! rpm -q origin-clients 2>&1 > /dev/null; then 
+  echo "Install origin: dnf -y install origin-clients"; 
+  exit 3
+elif ${ADD_NFS} && $(id -u) > 0; then
+  echo "Change ADD_PVS and ADD_NFS to false or run as root"
+  exit 4
 fi
 
 ${MINISHIFT} config set cpus ${CPUS} > /dev/null
