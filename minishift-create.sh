@@ -31,6 +31,22 @@ ${MINISHIFT} stop
 sleep 5
 ${MINISHIFT} start
 
+oc login -u system:admin
+oadm policy add-scc-to-group anyuid system:authenticated
+oadm policy add-cluster-role-to-user cluster-admin admin
+oc login -u admin -p admin
+
+if ${ADD_PVS}; then
+  for i in $(seq -w 1 $NUM_PVS); do
+    PART_A="apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv${i}"
+    PART_B="\nspec:\n  accessModes:\n  - ReadWriteOnce\n  - ReadWriteMany\n  "
+    PART_C="capacity:\n    storage: ${PV_SIZE}Gi\n  nfs:\n    path: /nfsvolum"
+    PART_D="es/pv${i}\n    server: ${PV_IP}\n  persistentVolumeReclaimPolicy:"
+    PART_E=" Recycle\n"
+    echo -ne "${PART_A}${PART_B}${PART_C}${PART_D}${PART_E}" | oc create -f -
+  done
+fi
+
 if ${ADD_NFS}; then
   dnf -y install nfs-utils iptables-services
 
@@ -74,19 +90,3 @@ if ${ADD_NFS}; then
     /usr/sbin/iptables -I INPUT 4 -p udp -m conntrack --ctstate NEW,RELATED,ESTABLISHED --dport 2049 -j ACCEPT
   fi
 fi
-
-if ${ADD_PVS}; then
-  for i in $(seq -w 1 $NUM_PVS); do
-    PART_A="apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv${i}"
-    PART_B="\nspec:\n  accessModes:\n  - ReadWriteOnce\n  - ReadWriteMany\n  "
-    PART_C="capacity:\n    storage: ${PV_SIZE}Gi\n  nfs:\n    path: /nfsvolum"
-    PART_D="es/pv${i}\n    server: ${PV_IP}\n  persistentVolumeReclaimPolicy:"
-    PART_E=" Recycle\n"
-    echo -ne "${PART_A}${PART_B}${PART_C}${PART_D}${PART_E}" | oc create -f -
-  done
-fi
-
-oc login -u system:admin
-oadm add-scc-to-group anyuid system:authenticated
-oadm policy add-cluster-role-to-user cluster-admin admin
-oc login -u admin -p admin
