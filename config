@@ -1,10 +1,10 @@
 #!/bin/bash
 export MINISHIFT=../minishift/minishift
 export CPUS=$(grep -c ^processor /proc/cpuinfo)
-export MEMORY=8192  #MiB
-export DISK_SIZE=32 #GiB
+export MEMORY=8192           #MiB
+export DISK_SIZE=34359738368 #Done very intuitively in bytes
 export ADD_NFS=false
 export ADD_PVS=true
 export NUM_PVS=10
-export PV_SIZE=3    #GiB
+export PV_SIZE=3             #GiB
 export PV_IP=$(ifconfig | grep -w inet | grep 122 | awk '{ print $2 }')

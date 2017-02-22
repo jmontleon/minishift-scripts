@@ -24,6 +24,7 @@ ${MINISHIFT} ssh -- "echo RUN yum -y install nfs-utils >> origin/Dockerfile"
 ${MINISHIFT} ssh -- docker build -t openshift/origin:v1.4.1 origin
 ${MINISHIFT} ssh -- sync
 ${MINISHIFT} stop
+sleep 5
 ${MINISHIFT} start
 
 if ${ADD_NFS}; then
@@ -70,8 +71,6 @@ if ${ADD_NFS}; then
   fi
 fi
 
-oc login -u system:admin
-
 if ${ADD_PVS}; then
   for i in $(seq -w 1 $NUM_PVS); do
     PART_A="apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv${i}"
@@ -81,14 +80,9 @@ if ${ADD_PVS}; then
     PART_E=" Recycle\n"
     echo -ne "${PART_A}${PART_B}${PART_C}${PART_D}${PART_E}" | oc create -f -
   done
-  
-  #This only works on a non-empty file so we check after and add it if it doesn't leave or update it
-  sed -i '/^\/nfsvolumes /{h;s/\ .*/ *(rw,insecure_locks,root_squash)/};${x;/^$/{s//\/nfsvolumes *(rw,insecure_locks,root_squash)/;H};x}' /etc/exports
-  if ! grep -q -w /nfsvolumes /etc/exports; then
-    echo "/nfsvolumes *(rw,insecure_locks,root_squash)" >> /etc/exports
-  fi
 fi
 
+oc login -u system:admin
 add-scc-to-group anyuid system:authenticated
 oadm policy add-cluster-role-to-user cluster-admin admin
 oc login -u admin -p admin
