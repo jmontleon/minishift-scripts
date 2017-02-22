@@ -1,4 +1,4 @@
 #!/bin/bash
 source config
 
-${MINISHIFT} start
+${MINISHIFT} delete

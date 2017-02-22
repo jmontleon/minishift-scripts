@@ -1,5 +1,6 @@
 #!/bin/bash
+source config
 
 # boot2misery^Wboot2docker likes to corrupt /var/lib/docker
-../minishift/minishift ssh -- sync \
-&& ../minishift/minishift stop
+${MINISHIFT} ssh -- sync 
+${MINISHIFT} stop
