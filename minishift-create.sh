@@ -14,7 +14,7 @@ elif ! rpm -q origin-clients 2>&1 > /dev/null; then
   echo "Install origin: dnf -y install origin-clients"; 
   exit 3
 elif ${ADD_NFS} && $(id -u) > 0; then
-  echo "Change ADD_PVS and ADD_NFS to false or run as root"
+  echo "Change ADD_NFS to false or run as root"
   exit 4
 fi
 
