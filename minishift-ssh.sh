@@ -1,4 +1,4 @@
 #!/bin/bash
 source config
 
-${MINISHIFT} delete
+${MINISHIFT} fix ssh wrapper
