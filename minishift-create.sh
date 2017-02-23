@@ -1,8 +1,6 @@
 #!/bin/bash
 source config
 
-echo Minishift is $MINISHIFT
-
 ### Things that may break if you change them:
 if [ ! -f ${MINISHIFT} ]; then
   echo "minishift not found. Change MINISHIFT and try again"
