@@ -19,15 +19,15 @@ fi
 ${MINISHIFT} config set cpus ${CPUS} > /dev/null
 ${MINISHIFT} config set memory ${MEMORY} > /dev/null
 ${MINISHIFT} config set disk-size ${DISK_SIZE} > /dev/null
-${MINISHIFT} start
+${MINISHIFT} start  --openshift-version "${ORIGIN_VERSION}"
 ${MINISHIFT} ssh -- mkdir -p origin
-${MINISHIFT} ssh -- "echo FROM openshift/origin:v1.4.1 > origin/Dockerfile"
+${MINISHIFT} ssh -- "echo FROM openshift/origin:${ORIGIN_VERSION} > origin/Dockerfile"
 ${MINISHIFT} ssh -- "echo RUN yum -y install nfs-utils >> origin/Dockerfile"
-${MINISHIFT} ssh -- docker build -t openshift/origin:v1.4.1 origin
+${MINISHIFT} ssh -- docker build -t openshift/origin:${ORIGIN_VERSION} origin
 ${MINISHIFT} ssh -- sync
 ${MINISHIFT} stop
 sleep 5
-${MINISHIFT} start
+${MINISHIFT} start --openshift-version "${ORIGIN_VERSION}"
 
 oc login -u system:admin
 oadm policy add-scc-to-group anyuid system:authenticated
