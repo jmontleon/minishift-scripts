@@ -8,3 +8,5 @@ export ADD_PVS=false
 export NUM_PVS=10
 export PV_SIZE=3             #GiB
 export PV_IP=$(ifconfig | grep -w inet | grep 122 | awk '{ print $2 }')
+export ORIGIN_VERSION=v1.4.1
+# export GH_TOKEN=
