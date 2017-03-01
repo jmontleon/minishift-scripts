@@ -10,9 +10,9 @@ for i in $(seq -w 1 $NUM_PVS); do
 done
 
 #This only works on a non-empty file so we check after and add it if it doesn't leave or update it
-sed -i '/^\/nfsvolumes /{h;s/\ .*/ *(rw,insecure_locks,root_squash)/};${x;/^$/{s//\/nfsvolumes *(rw,insecure_locks,root_squash)/;H};x}' /etc/exports
+sed -i '/^\/nfsvolumes /{h;s/\ .*/ *(rw,insecure_locks,no_root_squash)/};${x;/^$/{s//\/nfsvolumes *(rw,insecure_locks,no_root_squash)/;H};x}' /etc/exports
 if grep -q -v -w /nfsvolumes /etc/exports; then
-  echo "/nfsvolumes *(rw,insecure_locks,root_squash)" /etc/exports
+  echo "/nfsvolumes *(rw,insecure_locks,no_root_squash)" /etc/exports
 fi
 
 systemctl stop firewalld
