@@ -19,8 +19,16 @@ ${MINISHIFT} config set disk-size ${DISK_SIZE} > /dev/null
 ${MINISHIFT} start  --openshift-version "${ORIGIN_VERSION}"
 
 oc login -u system:admin
+
+#Let any uid run containers with user specified by container
 oadm policy add-scc-to-group anyuid system:authenticated
+
+#Add cluster-admin role to admin
 oadm policy add-cluster-role-to-user cluster-admin admin
+
+#Let any user use hostPath mounts
+oc adm policy add-scc-to-group hostmount-anyuid system:authenticated
+
 oc login -u admin -p admin
 
 path=/var/lib/origin/openshift.local.pv/pv
@@ -35,4 +43,6 @@ if [[ "${ORIGIN_VERSION}" < v1.5.0 ]] ; then
   done
 fi
 
-${MINISHIFT} ssh -- "for i in \$(seq -w 1 0100);do chmod 777 ${path}\${i};done"
+#1.5.0+ Spawns a container to create pv's and does not wait, so we need to wait
+sleep 30
+${MINISHIFT} ssh -- "sudo chmod 777 ${path}*;done"
